@@ -6,7 +6,7 @@ import { FiSearch, FiChevronDown, FiUser } from 'react-icons/fi';
 
 export default function NavBar() {
   return (
-    <div className="w-full h-17 flex pr-3 justify-between items-center">
+    <div className="w-full h-17 flex pr-3 justify-between items-center sticky top-0 bg-white z-10 px-2">
       <div className="w-70 h-[63%] bg-white rounded-md flex">
         <input
           type="text"

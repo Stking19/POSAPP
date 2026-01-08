@@ -25,7 +25,7 @@ export default function sidebar() {
 
   return (
     <>
-      <div className=" w-[19%] h-screen flex flex-col gap-6 pl-4 py-2">
+      <div className=" w-[19%] h-screen flex flex-col gap-6 pl-4 py-2 fixed bg-white">
         <div className="w-full h-[10%] flex items-center p-3">
           <h2 className="font-bold text-xl">KingStore</h2>
         </div>
