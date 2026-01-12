@@ -1,13 +1,25 @@
 "use client";
 
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import { CiCalendar } from "react-icons/ci";
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
+import { IoIosArrowDown } from "react-icons/io";
 import {
   RiShoppingCartFill,
   RiShoppingBagFill,
   RiBox3Fill,
   RiGroupFill,
 } from "react-icons/ri";
+import {
+  Line,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  ComposedChart,
+} from "recharts";
 
 const statsCardData: {
   title: string;
@@ -119,6 +131,16 @@ const recentActivityData: {
   },
 ];
 
+const salesData = [
+  { day: "Mon", sales: 2000 },
+  { day: "Tue", sales: 5000 },
+  { day: "Wed", sales: 3000 },
+  { day: "Thu", sales: 8000 },
+  { day: "Fri", sales: 4000 },
+  { day: "Sat", sales: 6500 },
+  { day: "Sun", sales: 4800 },
+];
+
 export default function AdminDashboard() {
   const date = new Date();
   const formattedDate = date.toLocaleDateString("en-NG", {
@@ -127,6 +149,9 @@ export default function AdminDashboard() {
     month: "long",
     day: "numeric",
   });
+
+  const [value, setValue] = useState("Last 7 days");
+  const [showOptions, setShowOptions] = useState(false);
   return (
     <>
       <div className="w-max h-18 flex flex-col">
@@ -163,8 +188,91 @@ export default function AdminDashboard() {
         ))}
       </div>
       <div className="w-full h-88 mt-5 justify-between flex">
-        <div className="w-[58%] h-full bg-white shadow-md rounded-lg"></div>
-        <div className="w-[40%] h-full bg-white shadow-md rounded-lg flex items-center justify-center">
+        <div className="w-[60%] h-full flex flex-col gap-2.5 justify-center bg-white shadow-md rounded-lg p-4">
+          <div className="w-full h-max flex justify-between items-center">
+            <h2 className="text-xl font-bold">Sales Overview</h2>
+            <div className="w-max h-max flex gap-1.5" onClick={() => setShowOptions(!showOptions)}>
+              <span className="w-max h-max relative cursor-pointer px-2.5 py-1 rounded-md border flex items-center gap-1.5 border-gray-200 text-gray-500 font-bold">
+                {value}
+                <p>
+                  <IoIosArrowDown />
+                </p>
+                {showOptions && (
+                  <div className="w-32 h-50 px-1 py-3 gap-2 bg-white absolute left-0 top-8 z-20 shadow-2xl flex flex-col justify-center">
+                    <p
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last 7 days" ? "bg-gray-200" : ""}`}
+                      onClick={() => setValue("Last 7 days")}
+                    >
+                      Last 7 days
+                    </p>
+                    <p
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last 30 days" ? "bg-gray-200" : ""}`}
+                      onClick={() => setValue("Last 30 days")}
+                    >
+                      Last 30 days
+                    </p>
+                    <p
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "This month" ? "bg-gray-200" : ""}`}
+                      onClick={() => setValue("This month")}
+                    >
+                      This month
+                    </p>
+                    <p
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last month" ? "bg-gray-200" : ""}`}
+                      onClick={() => setValue("Last month")}
+                    >
+                      Last month
+                    </p>
+                    <p
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "This year" ? "bg-gray-200" : ""}`}
+                      onClick={() => setValue("This year")}
+                    >
+                      This year
+                    </p>
+                  </div>
+                )}
+              </span>
+              <span className="w-max h-max cursor-pointer text-2xl font-bold px-2 py-1 rounded-md border border-gray-200 text-gray-500">
+                <CiCalendar />
+              </span>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={270}>
+            <ComposedChart data={salesData}>
+              <defs>
+                <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#2563eb" stopOpacity={0.3} />
+                  <stop offset="100%" stopColor="#2563eb" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis dataKey="day" axisLine={false} tickLine={false} />
+              <YAxis
+                domain={[0, 10000]}
+                tickCount={6}
+                tickFormatter={(value) => `₦${value / 1000}k`}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6b7280", fontSize: 14 }}
+              />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="sales"
+                stroke="none"
+                fill="url(#salesGradient)"
+              />
+              <Line
+                type="monotone"
+                dataKey="sales"
+                stroke="#2563eb"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="w-[38%] h-full bg-white shadow-md rounded-lg flex items-center justify-center">
           <div className="w-[90%] h-[90%] flex flex-col">
             <h2 className="text-xl font-bold">Top Products</h2>
             {prodSoldData.map((data, index) => (
@@ -190,7 +298,9 @@ export default function AdminDashboard() {
 
       <div className="w-full h-max flex flex-col bg-white border-b-0 border-2 border-gray-300 shadow-md rounded-t-lg mt-6">
         <div className="w-full h-17 flex items-center pl-4">
-          <h3 className="text-[18px] font-bold text-gray-700">Recent Activity</h3>
+          <h3 className="text-[18px] font-bold text-gray-700">
+            Recent Activity
+          </h3>
         </div>
         <div className="w-full h-10 flex items-center px-4 border-b border-gray-300 bg-gray-100 text-[16px] text-gray-500 font-medium">
           <p className="w-[33%]">Product Name</p>
