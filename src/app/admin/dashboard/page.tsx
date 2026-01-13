@@ -140,6 +140,42 @@ const salesData = [
   { day: "Sat", sales: 6500 },
   { day: "Sun", sales: 4800 },
 ];
+const salesDataT = [
+  { day: "Mon", sales: 2000 },
+  { day: "Tue", sales: 5000 },
+  { day: "Wed", sales: 3000 },
+  { day: "Thu", sales: 8000 },
+  { day: "Fri", sales: 4000 },
+  { day: "Sat", sales: 6500 },
+  { day: "Sun", sales: 4800 },
+];
+const salesDataM = [
+  { day: "Mon", sales: 2000 },
+  { day: "Tue", sales: 5000 },
+  { day: "Wed", sales: 3000 },
+  { day: "Thu", sales: 8000 },
+  { day: "Fri", sales: 4000 },
+  { day: "Sat", sales: 6500 },
+  { day: "Sun", sales: 4800 },
+];
+const salesDataLM = [
+  { day: "Mon", sales: 2000 },
+  { day: "Tue", sales: 5000 },
+  { day: "Wed", sales: 3000 },
+  { day: "Thu", sales: 8000 },
+  { day: "Fri", sales: 4000 },
+  { day: "Sat", sales: 6500 },
+  { day: "Sun", sales: 4800 },
+];
+const salesDataTY = [
+  { day: "Mon", sales: 2000 },
+  { day: "Tue", sales: 5000 },
+  { day: "Wed", sales: 3000 },
+  { day: "Thu", sales: 8000 },
+  { day: "Fri", sales: 4000 },
+  { day: "Sat", sales: 6500 },
+  { day: "Sun", sales: 4800 },
+];
 
 export default function AdminDashboard() {
   const date = new Date();
