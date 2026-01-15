@@ -131,51 +131,53 @@ const recentActivityData: {
   },
 ];
 
-const salesData = [
-  { day: "Mon", sales: 2000 },
-  { day: "Tue", sales: 5000 },
-  { day: "Wed", sales: 3000 },
-  { day: "Thu", sales: 8000 },
-  { day: "Fri", sales: 4000 },
-  { day: "Sat", sales: 6500 },
-  { day: "Sun", sales: 4800 },
-];
-const salesDataT = [
-  { day: "Mon", sales: 2000 },
-  { day: "Tue", sales: 5000 },
-  { day: "Wed", sales: 3000 },
-  { day: "Thu", sales: 8000 },
-  { day: "Fri", sales: 4000 },
-  { day: "Sat", sales: 6500 },
-  { day: "Sun", sales: 4800 },
-];
-const salesDataM = [
-  { day: "Mon", sales: 2000 },
-  { day: "Tue", sales: 5000 },
-  { day: "Wed", sales: 3000 },
-  { day: "Thu", sales: 8000 },
-  { day: "Fri", sales: 4000 },
-  { day: "Sat", sales: 6500 },
-  { day: "Sun", sales: 4800 },
-];
-const salesDataLM = [
-  { day: "Mon", sales: 2000 },
-  { day: "Tue", sales: 5000 },
-  { day: "Wed", sales: 3000 },
-  { day: "Thu", sales: 8000 },
-  { day: "Fri", sales: 4000 },
-  { day: "Sat", sales: 6500 },
-  { day: "Sun", sales: 4800 },
-];
-const salesDataTY = [
-  { day: "Mon", sales: 2000 },
-  { day: "Tue", sales: 5000 },
-  { day: "Wed", sales: 3000 },
-  { day: "Thu", sales: 8000 },
-  { day: "Fri", sales: 4000 },
-  { day: "Sat", sales: 6500 },
-  { day: "Sun", sales: 4800 },
-];
+const salesDataMap: Record<string, { day: string; sales: number }[]> = {
+  "Last 7 days": [
+    { day: "Mon", sales: 2000 },
+    { day: "Tue", sales: 5000 },
+    { day: "Wed", sales: 3000 },
+    { day: "Thu", sales: 8000 },
+    { day: "Fri", sales: 4000 },
+    { day: "Sat", sales: 6500 },
+    { day: "Sun", sales: 4800 },
+  ],
+
+  "Last 30 days": [
+    { day: "Week 1", sales: 18000 },
+    { day: "Week 2", sales: 24000 },
+    { day: "Week 3", sales: 21000 },
+    { day: "Week 4", sales: 27000 },
+  ],
+
+  "This month": [
+    { day: "1–7", sales: 15000 },
+    { day: "8–14", sales: 22000 },
+    { day: "15–21", sales: 18000 },
+    { day: "22–28", sales: 26000 },
+  ],
+
+  "Last month": [
+    { day: "1–7", sales: 12000 },
+    { day: "8–14", sales: 20000 },
+    { day: "15–21", sales: 17000 },
+    { day: "22–28", sales: 23000 },
+  ],
+
+  "This year": [
+    { day: "Jan", sales: 45000 },
+    { day: "Feb", sales: 38000 },
+    { day: "Mar", sales: 52000 },
+    { day: "Apr", sales: 61000 },
+    { day: "May", sales: 58000 },
+    { day: "Jun", sales: 100000 },
+    { day: "July", sales: 50000 },
+    { day: "Aug", sales: 48000 },
+    { day: "Sep", sales: 52000 },
+    { day: "Oct", sales: 35000 },
+    { day: "Nov", sales: 44000 },
+    { day: "Dec", sales: 64000 },
+  ],
+};
 
 export default function AdminDashboard() {
   const date = new Date();
@@ -227,40 +229,53 @@ export default function AdminDashboard() {
         <div className="w-[60%] h-full flex flex-col gap-2.5 justify-center bg-white shadow-md rounded-lg p-4">
           <div className="w-full h-max flex justify-between items-center">
             <h2 className="text-xl font-bold">Sales Overview</h2>
-            <div className="w-max h-max flex gap-1.5" onClick={() => setShowOptions(!showOptions)}>
+            <div
+              className="w-max h-max flex gap-1.5"
+              onClick={() => setShowOptions(!showOptions)}
+            >
               <span className="w-max h-max relative cursor-pointer px-2.5 py-1 rounded-md border flex items-center gap-1.5 border-gray-200 text-gray-500 font-bold">
                 {value}
                 <p>
                   <IoIosArrowDown />
                 </p>
                 {showOptions && (
-                  <div className="w-32 h-50 px-1 py-3 gap-2 bg-white absolute left-0 top-8 z-20 shadow-2xl flex flex-col justify-center">
+                  <div className="w-32 h-50 px-1 py-3 gap-2 bg-white absolute left-0 top-8 z-1 shadow-2xl flex flex-col justify-center">
                     <p
-                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last 7 days" ? "bg-gray-200" : ""}`}
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${
+                        value === "Last 7 days" ? "bg-gray-200" : ""
+                      }`}
                       onClick={() => setValue("Last 7 days")}
                     >
                       Last 7 days
                     </p>
                     <p
-                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last 30 days" ? "bg-gray-200" : ""}`}
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${
+                        value === "Last 30 days" ? "bg-gray-200" : ""
+                      }`}
                       onClick={() => setValue("Last 30 days")}
                     >
                       Last 30 days
                     </p>
                     <p
-                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "This month" ? "bg-gray-200" : ""}`}
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${
+                        value === "This month" ? "bg-gray-200" : ""
+                      }`}
                       onClick={() => setValue("This month")}
                     >
                       This month
                     </p>
                     <p
-                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "Last month" ? "bg-gray-200" : ""}`}
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${
+                        value === "Last month" ? "bg-gray-200" : ""
+                      }`}
                       onClick={() => setValue("Last month")}
                     >
                       Last month
                     </p>
                     <p
-                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${value === "This year" ? "bg-gray-200" : ""}`}
+                      className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-sm ${
+                        value === "This year" ? "bg-gray-200" : ""
+                      }`}
                       onClick={() => setValue("This year")}
                     >
                       This year
@@ -274,7 +289,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <ResponsiveContainer width="100%" height={270}>
-            <ComposedChart data={salesData}>
+            <ComposedChart data={salesDataMap[value]}>
               <defs>
                 <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#2563eb" stopOpacity={0.3} />
