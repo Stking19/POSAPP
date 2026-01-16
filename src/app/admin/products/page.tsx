@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { BsArrowsVertical } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
@@ -11,11 +12,28 @@ import { LuDownload } from "react-icons/lu";
 import { TbCancel } from "react-icons/tb";
 
 export default function Products() {
-  const [openActions, setOpenActions] = useState(null);
+  const [openActions, setOpenActions] = useState<number | null>(null);
+  const [openDirection, setOpenDirection] = useState<"up" | "down">("down");
 
-  const handleActions = (index: any) => {
+  const handleActions = (
+    index: number,
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+
+    // estimated dropdown height
+    const dropdownHeight = 180;
+
+    if (spaceBelow < dropdownHeight) {
+      setOpenDirection("up");
+    } else {
+      setOpenDirection("down");
+    }
+
     setOpenActions(index === openActions ? null : index);
   };
+
   const productData: {
     name: string;
     sku: string;
@@ -24,6 +42,7 @@ export default function Products() {
     stock: number;
     category: string;
     status: string;
+    img: string;
   }[] = [
     {
       name: "Organic Coffee Beans",
@@ -33,6 +52,7 @@ export default function Products() {
       stock: 45,
       category: "Beverages",
       status: "Active",
+      img: "/IMG/Organic-coffee.jpg",
     },
     {
       name: "Smartphone Stand",
@@ -42,6 +62,7 @@ export default function Products() {
       stock: 8,
       category: "Accessories",
       status: "Active",
+      img: "/IMG/modern-smartphone-design-with-floating-elements.jpg",
     },
     {
       name: "Wireless Earbuds",
@@ -51,17 +72,17 @@ export default function Products() {
       stock: 0,
       category: "Electronics",
       status: "Active",
+      img: "/IMG/rendering-smart-home-device.jpg",
     },
   ];
 
   const formatPrice = (value: number) =>
-  new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-
+    new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
 
   return (
     <>
@@ -128,20 +149,33 @@ export default function Products() {
               <p className="">Actions</p>
             </div>
             {productData.map((product, index) => (
-              <div className="w-full h-20 rounded-t-2xl border-b-2 border-gray-200 flex items-center px-4" key={index}>
+              <div
+                className="w-full h-20 rounded-t-2xl border-b-2 border-gray-200 flex items-center px-4"
+                key={index}
+              >
                 <div className="w-[32%] h-full flex gap-3 items-center">
-                  <div className="w-11 h-12 rounded-xl bg-blue-400"></div>
-                  <p className="font-bold text-gray-600">
-                    {product.name}
-                  </p>
+                  <div className="w-11 h-12 rounded-xl"><Image src={product.img} alt="Product Image" width={40} height={100} className="w-full h-full rounded-xl"></Image></div>
+                  <p className="font-bold text-gray-600">{product.name}</p>
                 </div>
                 <div className="w-[20%] h-full flex flex-col justify-center">
                   <p className="font-bold text-gray-600">{product.sku}</p>
                   <p className="text-gray-500">{product.barcode}</p>
                 </div>
-                <div className="w-[15%] font-bold text-gray-600">{formatPrice(product.price)}</div>
+                <div className="w-[15%] font-bold text-gray-600">
+                  {formatPrice(product.price)}
+                </div>
                 <div className="w-[12%]">
-                  <div className={`h-8 w-10 ${product.stock > 10 ? 'bg-green-600' : product.stock === 0 ? 'bg-red-500'  : product.stock <= 10 ? 'bg-yellow-500' : ''} rounded-2xl flex items-center justify-center text-white`}>
+                  <div
+                    className={`h-8 w-10 ${
+                      product.stock > 10
+                        ? "bg-green-600"
+                        : product.stock === 0
+                        ? "bg-red-500"
+                        : product.stock <= 10
+                        ? "bg-yellow-500"
+                        : ""
+                    } rounded-2xl flex items-center justify-center text-white`}
+                  >
                     {product.stock}
                   </div>
                 </div>
@@ -149,11 +183,16 @@ export default function Products() {
                   <div className="h-8 w-14 bg-green-600 rounded-2xl flex items-center justify-center text-white"></div>
                 </div>
                 <div className="w-max ml-5 relative">
-                  <div className="w-8 h-9 bg-gray-100 rounded-lg flex justify-center items-center cursor-pointer" onClick={() => handleActions(index)} >
+                  <div
+                    className="w-8 h-9 bg-gray-100 rounded-lg flex justify-center items-center cursor-pointer"
+                    onClick={(e) => handleActions(index, e)}
+                  >
                     <HiOutlineDotsVertical size={20} />
                   </div>
-                  {openActions === index &&(
-                    <div className="w-47 h-45 absolute right-0 z-1 top-10 bg-white shadow-md rounded-2xl border border-gray-200 flex flex-col justify-center px-1.5 py-2 text-gray-600 font-medium">
+                  {openActions === index && (
+                    <div
+                      className={`w-47 h-45 absolute right-0 z-10 bg-white shadow-md rounded-2xl border border-gray-200 ${openDirection === "down" ? "top-10" : "bottom-10"}`}
+                    >
                       <div className="w-full flex gap-2 items-center cursor-pointer hover:bg-gray-100 rounded-xl py-2 px-2">
                         <span>
                           <CiEdit size={25} />
